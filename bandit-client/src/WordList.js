@@ -1,9 +1,21 @@
-import React from 'react';
+import React, { useState, useEffect } from "react";
 
 function WordList(props) {
-  const wordListElt = props.wordList.map((elt, idx) =>
-    <li key={idx}>{elt}</li>
-  )
+  let [wordList, setWordList] = useState([]);
+
+  useEffect(() => {
+    const handleUpdateWordList = (lst) => {
+      setWordList(lst);
+    };
+
+    props.socket.on("updateWordList", handleUpdateWordList);
+
+    return () => {
+      props.socket.off("updateWordList", handleUpdateWordList);
+    };
+  }, [props.socket]);
+
+  const wordListElt = wordList.map((elt, idx) => <li key={idx}>{elt}</li>);
 
   return (
     <div>

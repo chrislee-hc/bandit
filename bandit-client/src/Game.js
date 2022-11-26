@@ -1,23 +1,31 @@
-import React from "react";
+import React, { useEffect, useState, useRef } from "react";
 
+import Reset from "./Reset";
 import Board from "./Board";
 import Entry from "./Entry";
 import WordList from "./WordList";
 
-class Game extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      dictionary: require("./data/words_dictionary.json"),
-      wordList: [],
-      flippedTiles: [],
-    };
-    this.ref = React.createRef();
-  }
+function Game(props) {
+  let dictionary = require("./data/words_dictionary.json");
+  let [wordList, setWordList] = useState([]);
+  let [flippedTiles, setFlippedTiles] = useState([]);
+  let ref = useRef(null);
 
-  handleSubmit(word) {
+  useEffect(() => {
+    const flipListener = (newFlippedTiles) => {
+      setFlippedTiles(newFlippedTiles);
+    };
+
+    props.socket.on("updateFlippedTiles", flipListener);
+
+    return () => {
+      props.socket.off("updateFlippedTiles");
+    };
+  }, [props.socket]);
+
+  const handleSubmit = (word) => {
     let valid;
-    if (!(word in this.state.dictionary)) {
+    if (!(word in dictionary)) {
       return false;
     }
 
@@ -25,23 +33,23 @@ class Game extends React.Component {
     valid = true;
     let freqs = charCounts(word);
     let freqs_copy = JSON.parse(JSON.stringify(freqs));
-    for (let i = 0; i < this.state.flippedTiles.length; i++) {
-      if (this.state.flippedTiles[i] in freqs_copy) {
-        freqs_copy[this.state.flippedTiles[i]]--;
+    for (let i = 0; i < flippedTiles.length; i++) {
+      if (flippedTiles[i] in freqs_copy) {
+        freqs_copy[flippedTiles[i]]--;
       }
     }
     if (countMaxVal(freqs_copy) <= 0) {
-      for (let i = this.state.flippedTiles.length - 1; i >= 0; i--) {
-        let c = this.state.flippedTiles[i];
+      for (let i = flippedTiles.length - 1; i >= 0; i--) {
+        let c = flippedTiles[i];
         if (c in freqs && freqs[c] > 0) {
           freqs[c]--;
-          this.state.flippedTiles.splice(i, 1);
+          flippedTiles.splice(i, 1);
         }
       }
     } else {
       let stealFrom = -1;
-      for (let i = this.state.wordList.length - 1; i >= 0; i--) {
-        let curWord = this.state.wordList[i];
+      for (let i = wordList.length - 1; i >= 0; i--) {
+        let curWord = wordList[i];
         // very rough heuristic for words that are very similar
         if (
           word === curWord + "s" ||
@@ -72,9 +80,9 @@ class Game extends React.Component {
         if (countMaxVal(freqs_copy) <= 0) {
           continue;
         }
-        for (let j = 0; j < this.state.flippedTiles.length; j++) {
-          if (this.state.flippedTiles[j] in freqs_copy) {
-            freqs_copy[this.state.flippedTiles[j]]--;
+        for (let j = 0; j < flippedTiles.length; j++) {
+          if (flippedTiles[j] in freqs_copy) {
+            freqs_copy[flippedTiles[j]]--;
           }
         }
         if (countMaxVal(freqs_copy) <= 0) {
@@ -85,12 +93,12 @@ class Game extends React.Component {
               freqs[c]--;
             }
           }
-          this.state.wordList.splice(i, 1);
-          for (let j = this.state.flippedTiles.length - 1; j >= 0; j--) {
-            let c = this.state.flippedTiles[j];
+          wordList.splice(i, 1);
+          for (let j = flippedTiles.length - 1; j >= 0; j--) {
+            let c = flippedTiles[j];
             if (c in freqs && freqs[c] > 0) {
               freqs[c]--;
-              this.state.flippedTiles.splice(j, 1);
+              flippedTiles.splice(j, 1);
             }
           }
           break;
@@ -105,36 +113,27 @@ class Game extends React.Component {
     // TODO: check for multi-word steals
 
     if (valid) {
-      this.setState({
-        wordList: [...this.state.wordList, word],
-      });
+      setWordList([...this.state.wordList, word]);
     }
     return valid;
-  }
+  };
 
-  handleFlip(tile) {
-    this.setState({
-      flippedTiles: [...this.state.flippedTiles, tile],
-    });
-    this.ref.current.focus();
-  }
-
-  render() {
-    return (
-      <div>
-        <Board
-          onFlip={(tile) => this.handleFlip(tile)}
-          flippedTiles={this.state.flippedTiles}
-        />
-        <Entry
-          onSubmit={(word) => this.handleSubmit(word)}
-          passedRef={this.ref}
-          socket={this.props.socket}
-        />
-        <WordList wordList={this.state.wordList} />
-      </div>
-    );
-  }
+  return (
+    <div>
+      <Reset socket={props.socket} />
+      <Board
+        flippedTiles={flippedTiles}
+        socket={props.socket}
+        passedRef={ref}
+      />
+      <Entry
+        onSubmit={(word) => handleSubmit(word)}
+        passedRef={ref}
+        socket={props.socket}
+      />
+      <WordList socket={props.socket} />
+    </div>
+  );
 }
 
 function charCounts(s) {

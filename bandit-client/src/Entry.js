@@ -1,53 +1,49 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./Entry.css";
 
-class Entry extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      message: "",
-      wordList: [],
+function Entry(props) {
+  let [message, setMessage] = useState("");
+
+  useEffect(() => {
+    const handleWordResponse = (b) => {
+      if (b) {
+        setMessage("");
+      }
     };
-  }
 
-  handleSubmit() {
-    let word = this.state.message;
-    let valid = this.props.onSubmit(word);
-    if (valid) {
-      this.setState({
-        wordList: [...this.state.wordList, word],
-        message: "",
-      });
-      this.props.socket.emit("message", word);
-    }
-  }
+    props.socket.on("wordResponse", handleWordResponse);
 
-  handleChange(event) {
-    this.setState({
-      wordList: this.state.wordList,
-      message: event.target.value,
-    });
-  }
+    return () => {
+      props.socket.off("wordResponse", handleWordResponse);
+    };
+  }, [props.socket]);
 
-  handleKeyPress(e) {
+  const handleSubmit = () => {
+    let word = message;
+    props.socket.emit("word", word);
+  };
+
+  const handleChange = (event) => {
+    setMessage(event.target.value);
+  };
+
+  const handleKeyPress = (e) => {
     if (e.key === "Enter") {
-      this.handleSubmit();
+      handleSubmit();
     }
-  }
+  };
 
-  render() {
-    return (
-      <div className="Entry">
-        <input
-          className="answer"
-          onKeyPress={(event) => this.handleKeyPress(event)}
-          onChange={(event) => this.handleChange(event)}
-          value={this.state.message}
-          ref={this.props.passedRef}
-        />
-      </div>
-    );
-  }
+  return (
+    <div className="Entry">
+      <input
+        className="answer"
+        onKeyPress={(event) => handleKeyPress(event)}
+        onChange={(event) => handleChange(event)}
+        value={message}
+        ref={props.passedRef}
+      />
+    </div>
+  );
 }
 
 export default Entry;

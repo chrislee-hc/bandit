@@ -50,4 +50,5 @@ function SocketTest({ socket }) {
     </div>
   );
 }
+
 export default SocketTest;

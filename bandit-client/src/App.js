@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import io from "socket.io-client";
 import Game from "./Game";
-import SocketTest from "./SocketTest";
-import SocketTestInput from "./SocketTestInput";
+// import SocketTest from "./SocketTest";
+// import SocketTestInput from "./SocketTestInput";
 
 function App() {
   const [socket, setSocket] = useState(null);
@@ -17,8 +17,6 @@ function App() {
     <div>
       {socket ? (
         <div>
-          <SocketTest socket={socket} />
-          <SocketTestInput socket={socket} />
           <Game socket={socket} />
         </div>
       ) : (

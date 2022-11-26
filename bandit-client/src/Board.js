@@ -1,40 +1,39 @@
-import {useState} from 'react';
+import { useState, useEffect } from "react";
 
 function Board(props) {
-  let letterDistributions = require('./data/letter_distributions.json');
-  let genString = '';
-  for (const letter in letterDistributions) {
-    for (let i = 0; i < letterDistributions[letter]; i++) {
-      genString += letter;
-    }
-  }
+  let [numTilesRemaining, setNumTilesRemaining] = useState(null);
+  props.socket.emit("requestUpdate");
 
-  const [tilesRemaining, setTilesRemaining] = useState(genString);
-  
+  useEffect(() => {
+    const numTilesListener = (n) => setNumTilesRemaining(n);
+    props.socket.on("numTilesUpdate", numTilesListener);
+    return () => {
+      props.socket.off("numTilesUpdate", numTilesListener);
+    };
+  }, [props.socket]);
+
   const handleClick = () => {
-    let idx = randomIndex(tilesRemaining);
-    props.onFlip(tilesRemaining[idx]);
-    setTilesRemaining(tilesRemaining.substring(0, idx)
-                      + tilesRemaining.substring(idx + 1));
-  }
+    props.socket.emit("flip");
+    props.passedRef.current.focus();
+  };
 
   return (
     <div>
-      <h2>{tilesRemaining.length}/{genString.length} tiles remaining</h2>
       <button
         className="start"
         onClick={() => handleClick()}
-        disabled={tilesRemaining.length === 0}
+        disabled={numTilesRemaining === 0}
       >
         Flip Tile
       </button>
-      <p>{props.flippedTiles.join(' ')}</p>
+      {numTilesRemaining !== null ? (
+        <h2>{numTilesRemaining} tiles remaining</h2>
+      ) : (
+        ""
+      )}
+      <p>{props.flippedTiles.join(" ")}</p>
     </div>
   );
-}
-
-function randomIndex(s) {
-  return Math.floor(Math.random() * s.length);
 }
 
 export default Board;

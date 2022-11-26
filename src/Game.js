@@ -11,6 +11,7 @@ class Game extends React.Component {
       wordList: [],
       flippedTiles: [],
     }
+    this.ref = React.createRef();
   }
 
   handleSubmit(word) {
@@ -57,16 +58,18 @@ class Game extends React.Component {
     this.setState({
       flippedTiles: [...this.state.flippedTiles, tile]
     });
+    this.ref.current.focus();
   }
 
   render() {
+    console.log(this.ref);
     return (
       <div>
         <Board
           onFlip={(tile) => this.handleFlip(tile)} 
           flippedTiles={this.state.flippedTiles}
         />
-        <Entry onSubmit={(word) => this.handleSubmit(word)} />
+        <Entry onSubmit={(word) => this.handleSubmit(word)} passedRef={this.ref}/>
         <WordList wordList={this.state.wordList} />
       </div>
     );

@@ -18,10 +18,6 @@ function Board(props) {
                       + tilesRemaining.substring(idx + 1));
   }
 
-  let flippedTilesElt = props.flippedTiles.map((elt, idx) =>
-    <li key={idx}>{elt}</li>
-  )
-
   return (
     <div>
       <h2>{tilesRemaining.length}/{genString.length} tiles remaining</h2>
@@ -32,7 +28,7 @@ function Board(props) {
       >
         Flip Tile
       </button>
-      <ul>{flippedTilesElt}</ul>
+      <p>{props.flippedTiles.join(' ')}</p>
     </div>
   );
 }

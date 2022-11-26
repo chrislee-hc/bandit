@@ -8,6 +8,7 @@ class Entry extends React.Component {
       message: '',
       wordList: [],
     };
+    console.log(this.props);
   }
 
   handleSubmit() {
@@ -41,6 +42,7 @@ class Entry extends React.Component {
           onKeyPress={(event) => this.handleKeyPress(event)}
           onChange={(event) => this.handleChange(event)}
           value={this.state.message}
+          ref={this.props.passedRef}
         />
       </div>
     );

@@ -1,43 +1,50 @@
-import {useState} from 'react';
+import React from 'react';
 import './Entry.css';
 
-function Entry() {
-  const [message, setMessage] = useState('');
-  const [wordList, setWordList] = useState([]);
-
-  const handleSubmit = () => {
-    setWordList(wordList => [...wordList, message]);
-    setMessage('');
-    return;
+class Entry extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      message: '',
+      wordList: [],
+    };
   }
 
-  const handleChange = event => {
-    setMessage(event.target.value);
-  }
-
-  const handleKeyPress = e => {
-    if (e.key === "Enter") {
-      handleSubmit();
+  handleSubmit() {
+    let valid = this.props.onSubmit(this.state.message);
+    if (valid) {
+      this.setState({
+        wordList: [...this.state.wordList, this.state.message],
+        message: '',
+      })
     }
   }
 
-  const wordListElt = wordList.map((elt, idx) =>
-    <li key={idx}>{elt}</li>
-  );
+  handleChange(event) {
+    this.setState({
+      wordList: this.state.wordList,
+      message: event.target.value,
+    })
+  }
 
-  return (
-    <div className="Entry">
-      <input
-        className="answer"
-        onKeyPress={handleKeyPress}
-        onChange={handleChange}
-        value={message}
-      />
+  handleKeyPress(e) {
+    if (e.key === "Enter") {
+      this.handleSubmit();
+    }
+  }
 
-      <h2>Words:</h2>
-      <ul>{wordListElt}</ul>
-    </div>
-  );
+  render() {
+    return (
+      <div className="Entry">
+        <input
+          className="answer"
+          onKeyPress={(event) => this.handleKeyPress(event)}
+          onChange={(event) => this.handleChange(event)}
+          value={this.state.message}
+        />
+      </div>
+    );
+  }
 }
 
 export default Entry;

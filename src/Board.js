@@ -1,6 +1,6 @@
 import {useState} from 'react';
 
-function Board() {
+function Board(props) {
   let letterDistributions = require('./data/letter_distributions.json');
   let genString = '';
   for (const letter in letterDistributions) {
@@ -10,20 +10,21 @@ function Board() {
   }
 
   const [tilesRemaining, setTilesRemaining] = useState(genString);
-  const [flippedTiles, setFlippedTiles] = useState([]);
   
   const handleClick = () => {
     let idx = randomIndex(tilesRemaining);
-    setFlippedTiles(flippedTiles => [...flippedTiles, tilesRemaining[idx]]);
+    props.onFlip(tilesRemaining[idx]);
     setTilesRemaining(tilesRemaining.substring(0, idx)
                       + tilesRemaining.substring(idx + 1));
   }
 
-  let flippedTilesElt = flippedTiles.map((elt, idx) =>
+  let flippedTilesElt = props.flippedTiles.map((elt, idx) =>
     <li key={idx}>{elt}</li>
   )
+
   return (
     <div>
+      <h2>{tilesRemaining.length}/{genString.length} tiles remaining</h2>
       <button
         className="start"
         onClick={() => handleClick()}

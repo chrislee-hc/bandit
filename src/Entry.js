@@ -8,7 +8,6 @@ class Entry extends React.Component {
       message: '',
       wordList: [],
     };
-    console.log(this.props);
   }
 
   handleSubmit() {

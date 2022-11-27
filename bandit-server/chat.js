@@ -62,6 +62,7 @@ class Connection {
     if (!(word in dictionary)) {
       this.io.sockets.emit("wordResponse", false);
       valid = false;
+      return;
     }
 
     // check if word can be made from board alone
@@ -147,6 +148,7 @@ class Connection {
       if (stealFrom === -1) {
         valid = false;
         this.io.sockets.emit("wordResponse", false);
+        return;
       }
     }
     // TODO: check more edge cases

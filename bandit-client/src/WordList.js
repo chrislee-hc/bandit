@@ -7,9 +7,7 @@ function WordList(props) {
     const handleUpdateWordList = (lst) => {
       setWordList(lst);
     };
-
     props.socket.on("updateWordList", handleUpdateWordList);
-
     return () => {
       props.socket.off("updateWordList", handleUpdateWordList);
     };

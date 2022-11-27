@@ -20,9 +20,17 @@ function WordList(props) {
     </div>
   ));
 
+  let score = 0;
+  for (let i = 0; i < wordList.length; i++) {
+    score += wordList[i].length;
+  }
+
   return (
     <div className="word-list-container">
-      <div className="word-list-title">Words</div>
+      <div className="word-list-title">
+        <div className="user-name">Words</div>
+        <div className="user-score">{score}</div>
+      </div>
       <div className="word-list">{wordListElt}</div>
     </div>
   );

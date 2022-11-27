@@ -33,6 +33,7 @@
   background-color: white;
   color: black;
   border: 0.1rem solid;
+  min-width: 2rem;
 }
 
 .word-list-container {

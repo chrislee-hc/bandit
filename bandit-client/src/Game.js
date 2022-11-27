@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
+import "./Game.css";
 
-import Reset from "./Reset";
+import PlayerInput from "./PlayerInput";
 import Board from "./Board";
-import Entry from "./Entry";
 import WordList from "./WordList";
 
 function Game(props) {
@@ -22,15 +22,19 @@ function Game(props) {
   }, [props.socket]);
 
   return (
-    <div>
-      <Reset socket={props.socket} />
+    <div className="game-board">
+      <PlayerInput passedRef={ref} socket={props.socket} />
       <Board
         flippedTiles={flippedTiles}
         socket={props.socket}
         passedRef={ref}
       />
-      <Entry passedRef={ref} socket={props.socket} />
-      <WordList socket={props.socket} />
+      <div className="word-board">
+        <WordList socket={props.socket} />
+        <WordList socket={props.socket} />
+        <WordList socket={props.socket} />
+        <WordList socket={props.socket} />
+      </div>
     </div>
   );
 }

@@ -1,0 +1,8 @@
+.numTilesRemaining {
+  text-align: center;
+  padding: 1.5rem;
+  background-color: #dddddd;
+  max-width: 200px;
+  width: 100%;
+  font-size: 20px;
+}

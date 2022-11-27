@@ -1,0 +1,37 @@
+.tile-list {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.tile {
+  padding: 8px;
+  margin: 5px;
+  text-align: center;
+  background-color: #dddddd;
+  width: 20px;
+  height: 20px;
+}
+
+.tile-list-title {
+  text-align: center;
+  padding: 0.5rem;
+  margin: 5px;
+  background-color: #333333;
+  color: white;
+  font-size: 25px;
+  font-weight: bold;
+}
+
+.tile-list-container {
+  max-width: 506px;
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 1rem;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+  margin-bottom: 1rem;
+  border-style: solid;
+  border-width: thin;
+}

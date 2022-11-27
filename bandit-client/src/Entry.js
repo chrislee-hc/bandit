@@ -34,7 +34,7 @@ function Entry(props) {
   };
 
   return (
-    <div className="Entry">
+    <div className="entry">
       <input
         className="answer"
         onKeyPress={(event) => handleKeyPress(event)}

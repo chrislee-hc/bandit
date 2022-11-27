@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import "./WordList.css";
 
 function WordList(props) {
   let [wordList, setWordList] = useState([]);
@@ -13,12 +14,16 @@ function WordList(props) {
     };
   }, [props.socket]);
 
-  const wordListElt = wordList.map((elt, idx) => <li key={idx}>{elt}</li>);
+  const wordListElt = wordList.map((elt, idx) => (
+    <div key={idx} className="word-container">
+      {elt.toUpperCase()}
+    </div>
+  ));
 
   return (
-    <div>
-      <h2>Words:</h2>
-      <ul>{wordListElt}</ul>
+    <div className="word-list-container">
+      <div className="word-list-title">Words</div>
+      <div className="word-list">{wordListElt}</div>
     </div>
   );
 }

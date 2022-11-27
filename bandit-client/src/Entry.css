@@ -1,38 +1,3 @@
-.Entry {
+.entry {
   text-align: center;
-}
-
-.Entry-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .Entry-logo {
-    animation: Entry-logo-spin infinite 20s linear;
-  }
-}
-
-.Entry-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.Entry-link {
-  color: #61dafb;
-}
-
-@keyframes Entry-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
 }

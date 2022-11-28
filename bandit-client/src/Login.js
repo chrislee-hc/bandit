@@ -5,7 +5,7 @@ function Login(props) {
 
   useEffect(() => {
     const handleUsernameResponse = (b) => {
-      if (b) {
+      if (b && username.length > 0) {
         props.setUsername(username);
       }
     };

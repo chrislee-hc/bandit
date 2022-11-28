@@ -1,4 +1,4 @@
-import "./TilesRemaining.css";
+import "./stylesheets/TilesRemaining.css";
 
 function TilesRemaining(props) {
   return props.numTilesRemaining !== null ? (

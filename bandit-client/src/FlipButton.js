@@ -1,4 +1,4 @@
-import "./FlipButton.css";
+import "./stylesheets/FlipButton.css";
 
 function FlipButton(props) {
   const handleClick = () => {

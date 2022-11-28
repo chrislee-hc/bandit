@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "./PlayerInput.css";
+import "./stylesheets/PlayerInput.css";
 
 import FlipButton from "./FlipButton";
 import TilesRemaining from "./TilesRemaining";

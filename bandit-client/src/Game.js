@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import "./Game.css";
+import "./stylesheets/Game.css";
 
 import Login from "./Login";
 import PlayerInput from "./PlayerInput";

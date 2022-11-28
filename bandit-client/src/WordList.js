@@ -1,4 +1,4 @@
-import "./WordList.css";
+import "./stylesheets/WordList.css";
 
 function WordList(props) {
   const wordListElt = props.wordList.map((elt, idx) => (

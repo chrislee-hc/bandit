@@ -1,4 +1,4 @@
-import "./Reset.css";
+import "./stylesheets/Reset.css";
 
 function Reset(props) {
   const handleClick = () => {

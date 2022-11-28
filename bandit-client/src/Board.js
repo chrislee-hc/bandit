@@ -1,4 +1,4 @@
-import "./Board.css";
+import "./stylesheets/Board.css";
 
 function Board(props) {
   return (

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "./Entry.css";
+import "./stylesheets/Entry.css";
 
 function Entry(props) {
   let [message, setMessage] = useState("");

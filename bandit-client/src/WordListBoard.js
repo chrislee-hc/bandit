@@ -1,5 +1,5 @@
 import WordList from "./WordList";
-import "./WordListBoard.css";
+import "./stylesheets/WordListBoard.css";
 
 function WordListBoard(props) {
   return (

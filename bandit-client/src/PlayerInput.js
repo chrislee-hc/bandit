@@ -20,13 +20,19 @@ function PlayerInput(props) {
   return (
     <div className="player-input-container">
       <div className="actions-container">
-        <FlipButton
-          passedRef={props.passedRef}
-          socket={props.socket}
-          numTilesRemaining={numTilesRemaining}
-        />
-        <TilesRemaining numTilesRemaining={numTilesRemaining} />
-        <Reset socket={props.socket} />
+        <span>
+          <FlipButton
+            passedRef={props.passedRef}
+            socket={props.socket}
+            numTilesRemaining={numTilesRemaining}
+          />
+        </span>
+        <span>
+          <TilesRemaining numTilesRemaining={numTilesRemaining} />
+        </span>
+        <span>
+          <Reset socket={props.socket} />
+        </span>
       </div>
       <div className="entry-container">
         <Entry

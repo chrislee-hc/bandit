@@ -58,6 +58,9 @@ class Connection {
   }
 
   handleWord([word, username]) {
+    if (word.length < 3) {
+      this.socket.emit("wordResponse", false);
+    }
     let valid;
     word = word.toLowerCase();
     if (!(word in dictionary)) {

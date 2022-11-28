@@ -56,6 +56,7 @@ class Connection {
 
   handleWord([word, username]) {
     let valid;
+    word = word.toLowerCase();
     if (!(word in dictionary)) {
       this.io.sockets.emit("wordResponse", false);
       valid = false;
@@ -83,9 +84,8 @@ class Connection {
       this.io.sockets.emit("updateFlippedTiles", flippedTiles);
     } else {
       let stealFrom = -1;
-      for (username in wordLists) {
-        let wordList = wordLists[username];
-        console.log(wordList);
+      for (let stealUsername in wordLists) {
+        let wordList = wordLists[stealUsername];
         for (let i = wordList.length - 1; i >= 0; i--) {
           let curWord = wordList[i];
           // very rough heuristic for words that are very similar
@@ -145,11 +145,11 @@ class Connection {
             break;
           }
         }
-        if (stealFrom === -1) {
-          valid = false;
-          this.io.sockets.emit("wordResponse", false);
-          return;
-        }
+      }
+      if (stealFrom === -1) {
+        valid = false;
+        this.io.sockets.emit("wordResponse", false);
+        return;
       }
     }
     // TODO: check more edge cases
@@ -175,6 +175,7 @@ class Connection {
   }
 
   handleUsername(username) {
+    username = username.toLowerCase();
     for (let i = 0; i < usernames.length; i++) {
       if (usernames[i] === username) {
         this.io.sockets.emit("usernameResponse", false);

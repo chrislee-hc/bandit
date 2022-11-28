@@ -35,7 +35,7 @@ function Game(props) {
     </div>
   ) : (
     <div className="game-board">
-      <h1>{username}</h1>
+      <h1>{username.toLowerCase()}</h1>
       <PlayerInput passedRef={ref} socket={props.socket} username={username} />
       <Board
         flippedTiles={flippedTiles}

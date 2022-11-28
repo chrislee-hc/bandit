@@ -33,6 +33,9 @@ class Connection {
     this.socket = socket;
     this.io = io;
 
+    // connection messages
+    socket.emit("serverRestart");
+
     socket.on("getMessages", () => this.getMessages());
     socket.on("message", (value) => this.handleMessage(value));
     socket.on("disconnect", () => this.disconnect());
@@ -58,7 +61,7 @@ class Connection {
     let valid;
     word = word.toLowerCase();
     if (!(word in dictionary)) {
-      this.io.sockets.emit("wordResponse", false);
+      this.socket.emit("wordResponse", false);
       valid = false;
       return;
     }
@@ -80,7 +83,7 @@ class Connection {
           flippedTiles.splice(i, 1);
         }
       }
-      this.io.sockets.emit("wordResponse", true);
+      this.socket.emit("wordResponse", true);
       this.io.sockets.emit("updateFlippedTiles", flippedTiles);
     } else {
       let stealFrom = -1;
@@ -140,7 +143,7 @@ class Connection {
               }
             }
 
-            this.io.sockets.emit("wordResponse", true);
+            this.socket.emit("wordResponse", true);
             this.io.sockets.emit("updateFlippedTiles", flippedTiles);
             break;
           }
@@ -148,7 +151,7 @@ class Connection {
       }
       if (stealFrom === -1) {
         valid = false;
-        this.io.sockets.emit("wordResponse", false);
+        this.socket.emit("wordResponse", false);
         return;
       }
     }
@@ -178,14 +181,16 @@ class Connection {
     username = username.toLowerCase();
     for (let i = 0; i < usernames.length; i++) {
       if (usernames[i] === username) {
-        this.io.sockets.emit("usernameResponse", false);
+        this.socket.emit("usernameResponse", false);
         return;
       }
     }
-    this.io.sockets.emit("usernameResponse", true);
+    this.socket.emit("usernameResponse", true);
     usernames = [...usernames, username];
     wordLists[username] = [];
     this.io.sockets.emit("updateWordLists", wordLists);
+    this.socket.emit("numTilesUpdate", tilesRemaining.length);
+    this.socket.emit("updateFlippedTiles", flippedTiles);
   }
 
   sendMessage(message) {

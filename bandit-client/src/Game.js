@@ -10,6 +10,7 @@ function Game(props) {
   let [flippedTiles, setFlippedTiles] = useState([]);
   let [username, setUsername] = useState(null);
   let [wordLists, setWordLists] = useState({});
+  let [rejected, setRejected] = useState(false);
   let ref = useRef(null);
 
   useEffect(() => {
@@ -19,19 +20,30 @@ function Game(props) {
     const handleUpdateWordLists = (newWordLists) => {
       setWordLists(newWordLists);
     };
+    const handleReset = () => {
+      setUsername(null);
+      setRejected(false);
+    };
 
     props.socket.on("updateFlippedTiles", flipListener);
     props.socket.on("updateWordLists", handleUpdateWordLists);
+    props.socket.on("serverRestart", handleReset);
 
     return () => {
       props.socket.off("updateFlippedTiles", flipListener);
       props.socket.off("updateWordLists", handleUpdateWordLists);
+      props.socket.off("serverRestart", handleReset);
     };
   }, [props.socket]);
 
   return username === null ? (
     <div className="login-screen">
-      <Login socket={props.socket} setUsername={setUsername} />
+      <Login
+        socket={props.socket}
+        setUsername={setUsername}
+        rejected={rejected}
+        setRejected={setRejected}
+      />
     </div>
   ) : (
     <div className="game-board">

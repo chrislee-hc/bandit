@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import "./Login.css";
 
 function Login(props) {
   let [username, setUsername] = useState("");
@@ -7,6 +8,8 @@ function Login(props) {
     const handleUsernameResponse = (b) => {
       if (b && username.length > 0) {
         props.setUsername(username);
+      } else if (!b) {
+        props.setRejected(true);
       }
     };
     props.socket.on("usernameResponse", handleUsernameResponse);
@@ -17,6 +20,7 @@ function Login(props) {
 
   const handleChange = (event) => {
     setUsername(event.target.value);
+    props.setRejected(false);
   };
 
   const handleKeyPress = (event) => {
@@ -27,12 +31,18 @@ function Login(props) {
 
   return (
     <div className="login">
+      <h2>Enter a Username</h2>
       <input
         className="answer"
         onKeyPress={(event) => handleKeyPress(event)}
         onChange={(event) => handleChange(event)}
         value={username}
       />
+      {props.rejected && username.length > 0 ? (
+        <div className="rejected">Username already taken.</div>
+      ) : (
+        ""
+      )}
     </div>
   );
 }

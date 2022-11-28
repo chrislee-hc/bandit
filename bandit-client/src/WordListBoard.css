@@ -1,0 +1,4 @@
+.word-lists-container {
+  display: flex;
+  flex-direction: row;
+}

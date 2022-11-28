@@ -20,7 +20,7 @@ function Entry(props) {
 
   const handleSubmit = () => {
     let word = message;
-    props.socket.emit("word", word);
+    props.socket.emit("word", [word, props.username]);
   };
 
   const handleChange = (event) => {

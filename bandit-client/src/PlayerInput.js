@@ -30,7 +30,11 @@ function PlayerInput(props) {
         <Reset socket={props.socket} />
       </div>
       <div className="entry-container">
-        <Entry passedRef={props.passedRef} socket={props.socket} />
+        <Entry
+          passedRef={props.passedRef}
+          socket={props.socket}
+          username={props.username}
+        />
       </div>
     </div>
   );

@@ -1,8 +1,4 @@
 .game-board {
-  margin: auto;
-}
-
-.word-board {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
 }

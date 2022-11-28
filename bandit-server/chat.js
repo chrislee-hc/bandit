@@ -24,8 +24,9 @@ const initTilesRemaining = () => {
   return tilesRemaining;
 };
 let tilesRemaining = initTilesRemaining();
-
 let wordList = [];
+let wordLists = {};
+let usernames = [];
 
 class Connection {
   constructor(io, socket) {
@@ -46,6 +47,7 @@ class Connection {
       this.io.sockets.emit("updateFlippedTiles", flippedTiles);
       this.io.sockets.emit("updateWordList", wordList);
     });
+    socket.on("username", (name) => this.handleUsername(name));
   }
 
   handleFlip() {
@@ -57,7 +59,7 @@ class Connection {
     this.io.sockets.emit("numTilesUpdate", tilesRemaining.length);
   }
 
-  handleWord(word) {
+  handleWord([word, username]) {
     let valid;
     if (!(word in dictionary)) {
       this.io.sockets.emit("wordResponse", false);
@@ -86,69 +88,73 @@ class Connection {
       this.io.sockets.emit("updateFlippedTiles", flippedTiles);
     } else {
       let stealFrom = -1;
-      for (let i = wordList.length - 1; i >= 0; i--) {
-        let curWord = wordList[i];
-        // very rough heuristic for words that are very similar
-        if (
-          word === curWord + "s" ||
-          word === curWord + "es" ||
-          word === curWord + "d" ||
-          word === curWord + "ed" ||
-          word === curWord + "ing" ||
-          word === curWord + "y"
-        ) {
-          continue;
-        }
-        freqs_copy = JSON.parse(JSON.stringify(freqs));
-        let validSteal = true;
-        let curWordFreqs = charCounts(curWord);
-        for (let c in curWordFreqs) {
-          if (!(c in freqs_copy)) {
-            validSteal = false;
-          } else {
-            if (curWordFreqs[c] > freqs_copy[c]) {
+      for (username in wordLists) {
+        let wordList = wordLists[username];
+        console.log(wordList);
+        for (let i = wordList.length - 1; i >= 0; i--) {
+          let curWord = wordList[i];
+          // very rough heuristic for words that are very similar
+          if (
+            word === curWord + "s" ||
+            word === curWord + "es" ||
+            word === curWord + "d" ||
+            word === curWord + "ed" ||
+            word === curWord + "ing" ||
+            word === curWord + "y"
+          ) {
+            continue;
+          }
+          freqs_copy = JSON.parse(JSON.stringify(freqs));
+          let validSteal = true;
+          let curWordFreqs = charCounts(curWord);
+          for (let c in curWordFreqs) {
+            if (!(c in freqs_copy)) {
               validSteal = false;
-            }
-            freqs_copy[c] -= curWordFreqs[c];
-          }
-        }
-        if (!validSteal) {
-          continue;
-        }
-        if (countMaxVal(freqs_copy) <= 0) {
-          continue;
-        }
-        for (let j = 0; j < flippedTiles.length; j++) {
-          if (flippedTiles[j] in freqs_copy) {
-            freqs_copy[flippedTiles[j]]--;
-          }
-        }
-        if (countMaxVal(freqs_copy) <= 0) {
-          stealFrom = i;
-          for (let j = 0; j < curWord.length; j++) {
-            let c = curWord[j];
-            if (c in freqs && freqs[c] > 0) {
-              freqs[c]--;
+            } else {
+              if (curWordFreqs[c] > freqs_copy[c]) {
+                validSteal = false;
+              }
+              freqs_copy[c] -= curWordFreqs[c];
             }
           }
-          wordList.splice(i, 1);
-          for (let j = flippedTiles.length - 1; j >= 0; j--) {
-            let c = flippedTiles[j];
-            if (c in freqs && freqs[c] > 0) {
-              freqs[c]--;
-              flippedTiles.splice(j, 1);
+          if (!validSteal) {
+            continue;
+          }
+          if (countMaxVal(freqs_copy) <= 0) {
+            continue;
+          }
+          for (let j = 0; j < flippedTiles.length; j++) {
+            if (flippedTiles[j] in freqs_copy) {
+              freqs_copy[flippedTiles[j]]--;
             }
           }
+          if (countMaxVal(freqs_copy) <= 0) {
+            stealFrom = i;
+            for (let j = 0; j < curWord.length; j++) {
+              let c = curWord[j];
+              if (c in freqs && freqs[c] > 0) {
+                freqs[c]--;
+              }
+            }
+            wordList.splice(i, 1);
+            for (let j = flippedTiles.length - 1; j >= 0; j--) {
+              let c = flippedTiles[j];
+              if (c in freqs && freqs[c] > 0) {
+                freqs[c]--;
+                flippedTiles.splice(j, 1);
+              }
+            }
 
-          this.io.sockets.emit("wordResponse", true);
-          this.io.sockets.emit("updateFlippedTiles", flippedTiles);
-          break;
+            this.io.sockets.emit("wordResponse", true);
+            this.io.sockets.emit("updateFlippedTiles", flippedTiles);
+            break;
+          }
         }
-      }
-      if (stealFrom === -1) {
-        valid = false;
-        this.io.sockets.emit("wordResponse", false);
-        return;
+        if (stealFrom === -1) {
+          valid = false;
+          this.io.sockets.emit("wordResponse", false);
+          return;
+        }
       }
     }
     // TODO: check more edge cases
@@ -158,6 +164,8 @@ class Connection {
     if (valid) {
       wordList = [...wordList, word];
       this.io.sockets.emit("updateWordList", wordList);
+      wordLists[username] = [...wordLists[username], word];
+      this.io.sockets.emit("updateWordLists", wordLists);
     }
     return valid;
   }
@@ -169,6 +177,19 @@ class Connection {
     this.io.sockets.emit("updateFlippedTiles", flippedTiles);
     this.io.sockets.emit("numTilesUpdate", tilesRemaining.length);
     this.io.sockets.emit("updateWordList", wordList);
+  }
+
+  handleUsername(username) {
+    for (let i = 0; i < usernames.length; i++) {
+      if (usernames[i] === username) {
+        this.io.sockets.emit("usernameResponse", false);
+        return;
+      }
+    }
+    this.io.sockets.emit("usernameResponse", true);
+    usernames = [...usernames, username];
+    wordLists[username] = [];
+    this.io.sockets.emit("updateWordLists", wordLists);
   }
 
   sendMessage(message) {

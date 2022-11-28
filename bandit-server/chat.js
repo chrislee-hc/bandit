@@ -42,11 +42,6 @@ class Connection {
     socket.on("flip", () => this.handleFlip());
     socket.on("word", (word) => this.handleWord(word));
     socket.on("reset", () => this.handleReset());
-    socket.on("requestUpdate", () => {
-      this.io.sockets.emit("numTilesUpdate", tilesRemaining.length);
-      this.io.sockets.emit("updateFlippedTiles", flippedTiles);
-      this.io.sockets.emit("updateWordList", wordList);
-    });
     socket.on("username", (name) => this.handleUsername(name));
   }
 

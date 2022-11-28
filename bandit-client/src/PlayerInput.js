@@ -8,7 +8,6 @@ import Entry from "./Entry";
 
 function PlayerInput(props) {
   let [numTilesRemaining, setNumTilesRemaining] = useState(null);
-  props.socket.emit("requestUpdate");
 
   useEffect(() => {
     const numTilesListener = (n) => setNumTilesRemaining(n);

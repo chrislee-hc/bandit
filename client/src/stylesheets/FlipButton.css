@@ -6,11 +6,3 @@
   font-size: 20px;
   border: 0px;
 }
-
-.start:hover {
-  background-color: yellow;
-}
-
-.start:active {
-  background-color: rgb(15, 212, 35);
-}

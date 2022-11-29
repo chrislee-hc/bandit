@@ -30,6 +30,13 @@
   background-color: #333333;
 }
 
+.user-name-current {
+  width: 100%;
+  border-right: 0.3rem solid;
+  padding: 0.2rem;
+  background-color: blue;
+}
+
 .user-score {
   padding: 0.2rem;
   background-color: white;

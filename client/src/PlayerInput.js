@@ -25,6 +25,7 @@ function PlayerInput(props) {
             passedRef={props.passedRef}
             socket={props.socket}
             numTilesRemaining={numTilesRemaining}
+            disabled={props.username !== props.currentPlayer}
           />
         </span>
         <span>

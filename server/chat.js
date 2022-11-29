@@ -27,6 +27,7 @@ let tilesRemaining = initTilesRemaining();
 let wordList = [];
 let wordLists = {};
 let usernames = [];
+let current_player = 0;
 
 class Connection {
   constructor(io, socket) {
@@ -57,6 +58,9 @@ class Connection {
       tilesRemaining.substring(0, idx) + tilesRemaining.substring(idx + 1);
     this.io.sockets.emit("updateFlippedTiles", flippedTiles);
     this.io.sockets.emit("numTilesUpdate", tilesRemaining.length);
+
+    current_player = (current_player + 1) % usernames.length;
+    this.io.sockets.emit("currentPlayer", usernames[current_player]);
   }
 
   handleWord([word, username]) {
@@ -195,6 +199,7 @@ class Connection {
     this.io.sockets.emit("updateWordLists", wordLists);
     this.socket.emit("numTilesUpdate", tilesRemaining.length);
     this.socket.emit("updateFlippedTiles", flippedTiles);
+    this.socket.emit("currentPlayer", usernames[current_player]);
   }
 
   sendMessage(message) {

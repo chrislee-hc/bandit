@@ -11,6 +11,7 @@ function Game(props) {
   let [username, setUsername] = useState(null);
   let [wordLists, setWordLists] = useState({});
   let [rejected, setRejected] = useState(false);
+  let [currentPlayer, setCurrentPlayer] = useState(null);
   let ref = useRef(null);
 
   useEffect(() => {
@@ -24,15 +25,18 @@ function Game(props) {
       setUsername(null);
       setRejected(false);
     };
+    const currentPlayerListener = (un) => setCurrentPlayer(un);
 
     props.socket.on("updateFlippedTiles", flipListener);
     props.socket.on("updateWordLists", handleUpdateWordLists);
     props.socket.on("serverRestart", handleReset);
+    props.socket.on("currentPlayer", currentPlayerListener);
 
     return () => {
       props.socket.off("updateFlippedTiles", flipListener);
       props.socket.off("updateWordLists", handleUpdateWordLists);
       props.socket.off("serverRestart", handleReset);
+      props.socket.off("currentPlayer", currentPlayerListener);
     };
   }, [props.socket]);
 
@@ -48,14 +52,23 @@ function Game(props) {
   ) : (
     <div className="game-board">
       <h1>{username.toLowerCase()}</h1>
-      <PlayerInput passedRef={ref} socket={props.socket} username={username} />
+      <PlayerInput
+        passedRef={ref}
+        socket={props.socket}
+        username={username}
+        currentPlayer={currentPlayer}
+      />
       <Board
         flippedTiles={flippedTiles}
         socket={props.socket}
         passedRef={ref}
       />
       <div className="word-list-board">
-        <WordListBoard wordLists={wordLists} socket={props.socket} />
+        <WordListBoard
+          wordLists={wordLists}
+          socket={props.socket}
+          currentPlayer={currentPlayer}
+        />
       </div>
     </div>
   );

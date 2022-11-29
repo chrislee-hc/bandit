@@ -6,11 +6,3 @@
   font-size: 20px;
   border: 0px;
 }
-
-.reset:hover {
-  background-color: yellow;
-}
-
-.reset:active {
-  background-color: red;
-}

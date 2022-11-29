@@ -1,4 +1,5 @@
 import "./stylesheets/WordList.css";
+import classNames from "classnames";
 
 function WordList(props) {
   const wordListElt = props.wordList.map((elt, idx) => (
@@ -12,10 +13,15 @@ function WordList(props) {
     score += props.wordList[i].length;
   }
 
+  const usernameClass = classNames("WordList", {
+    "user-name": !props.isCurrent,
+    "user-name-current": props.isCurrent,
+  });
+
   return (
     <div className="word-list-container">
       <div className="word-list-title">
-        <div className="user-name">{props.username}</div>
+        <div className={usernameClass}>{props.username}</div>
         <div className="user-score">{score}</div>
       </div>
       <div className="word-list">{wordListElt}</div>

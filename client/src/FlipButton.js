@@ -10,7 +10,7 @@ function FlipButton(props) {
     <button
       className="start"
       onClick={() => handleClick()}
-      disabled={props.numTilesRemaining === 0}
+      disabled={props.disabled || props.numTilesRemaining === 0}
     >
       Flip Tile
     </button>

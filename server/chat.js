@@ -46,6 +46,8 @@ class Connection {
     socket.on("word", (word) => this.handleWord(word));
     socket.on("reset", () => this.handleReset());
     socket.on("username", (name) => this.handleUsername(name));
+
+    this.username = null;
   }
 
   handleFlip() {
@@ -182,12 +184,11 @@ class Connection {
 
   handleUsername(username) {
     username = username.toLowerCase();
-    for (let i = 0; i < usernames.length; i++) {
-      if (usernames[i] === username) {
-        this.socket.emit("usernameResponse", false);
-        return;
-      }
+    if (username in wordLists) {
+      this.socket.emit("usernameResponse", false);
+      return;
     }
+    this.username = username;
     this.socket.emit("usernameResponse", true);
     usernames = [...usernames, username];
     wordLists[username] = [];
@@ -222,6 +223,13 @@ class Connection {
   }
 
   disconnect() {
+    console.log(this.username + " disconnected");
+    for (let i = 0; i < usernames.length; i++) {
+      if (this.username == usernames[i]) {
+        usernames.splice(i, 1);
+        break;
+      }
+    }
     users.delete(this.socket);
   }
 }

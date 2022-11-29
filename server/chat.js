@@ -200,6 +200,7 @@ class Connection {
     this.socket.emit("numTilesUpdate", tilesRemaining.length);
     this.socket.emit("updateFlippedTiles", flippedTiles);
     this.socket.emit("currentPlayer", usernames[current_player]);
+    console.log(username + " logged in");
   }
 
   sendMessage(message) {
@@ -234,6 +235,9 @@ class Connection {
         usernames.splice(i, 1);
         break;
       }
+    }
+    if (this.username === usernames[current_player]) {
+      current_player = (current_player + 1) % usernames.length;
     }
     users.delete(this.socket);
   }

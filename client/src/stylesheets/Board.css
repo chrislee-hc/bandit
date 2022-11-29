@@ -1,8 +1,10 @@
 .tile-list {
   width: 100%;
+  height: 92px;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  overflow: scroll;
 }
 
 .tile {

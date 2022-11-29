@@ -4,4 +4,13 @@
   margin-left: 1rem;
   margin-right: 1rem;
   font-size: 20px;
+  border: 0px;
+}
+
+.reset:hover {
+  background-color: yellow;
+}
+
+.reset:active {
+  background-color: red;
 }

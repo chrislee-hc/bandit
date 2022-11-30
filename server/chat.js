@@ -24,7 +24,6 @@ const initTilesRemaining = () => {
   return tilesRemaining;
 };
 let tilesRemaining = initTilesRemaining();
-let wordList = [];
 let wordLists = {};
 let usernames = [];
 let current_player = 0;
@@ -169,8 +168,6 @@ class Connection {
     // TODO: check for multi-word steals
 
     if (valid) {
-      wordList = [...wordList, word];
-      this.io.sockets.emit("updateWordList", wordList);
       wordLists[username] = [...wordLists[username], word];
       this.io.sockets.emit("updateWordLists", wordLists);
     }
@@ -178,12 +175,15 @@ class Connection {
   }
 
   handleReset() {
+    wordLists = {};
     flippedTiles = [];
-    wordList = [];
     tilesRemaining = initTilesRemaining();
+    current_player = 0;
+    usernames = [];
     this.io.sockets.emit("updateFlippedTiles", flippedTiles);
     this.io.sockets.emit("numTilesUpdate", tilesRemaining.length);
-    this.io.sockets.emit("updateWordList", wordList);
+    this.io.sockets.emit("updateWordLists", wordLists);
+    this.io.sockets.emit("serverRestart");
   }
 
   handleUsername(username) {

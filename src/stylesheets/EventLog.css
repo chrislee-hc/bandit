@@ -32,3 +32,7 @@
 .user {
   font-weight: bold;
 }
+
+.tile-word {
+  font-style: italic;
+}

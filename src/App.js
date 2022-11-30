@@ -6,7 +6,13 @@ function App() {
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    const newSocket = io(`http://${window.location.hostname}:3000`);
+    const USE_PROD_SERVER = true;
+    let newSocket;
+    if (USE_PROD_SERVER) {
+      newSocket = io("https://bandit-server-production.up.railway.app/");
+    } else {
+      newSocket = io(`http://${window.location.hostname}:3000`);
+    }
     setSocket(newSocket);
     return () => newSocket.close();
   }, [setSocket]);

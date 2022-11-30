@@ -1,2 +1,2 @@
-client/node_modules/.cache/
+node_modules/.cache/
 .DS_STORE

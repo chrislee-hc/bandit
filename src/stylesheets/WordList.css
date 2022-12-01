@@ -6,10 +6,7 @@
 
 .word-container {
   flex-direction: row;
-  padding: 0.5rem;
-  margin: 0.3rem;
   text-align: center;
-  background-color: #dddddd;
 }
 
 .word-list-title {

@@ -28,7 +28,7 @@ function EventLog(props) {
   }, [props.socket]);
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    bottomRef.current?.scrollIntoView();
   }, [events, optionsSelectedSet]);
 
   const eventToDiv = (event, idx) => {

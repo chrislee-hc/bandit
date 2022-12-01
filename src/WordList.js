@@ -1,10 +1,12 @@
-import "./stylesheets/WordList.css";
 import classNames from "classnames";
+import WordListWordTiles from "./WordListWordTiles";
+
+import "./stylesheets/WordList.css";
 
 function WordList(props) {
   const wordListElt = props.wordList.map((elt, idx) => (
-    <div key={idx} className="word-container">
-      {elt.toUpperCase()}
+    <div className="word-container" key={idx}>
+      <WordListWordTiles word={elt} />
     </div>
   ));
 

@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
 
 import OptionsDropdown from "./OptionsDropdown";
+import WordTiles from "./WordTiles";
+import TextTile from "./TextTile";
 import "./stylesheets/EventLog.css";
 
 function EventLog(props) {
@@ -41,7 +43,7 @@ function EventLog(props) {
         return (
           <div className="event-text" key={idx}>
             <div className="user">{event["agent"]}</div>&nbsp;flipped a tile:{" "}
-            {event["tile"].toUpperCase()}
+            <TextTile letter={event["tile"]} />
           </div>
         );
       case "join":
@@ -70,12 +72,10 @@ function EventLog(props) {
           return (
             <div className="event-text" key={idx}>
               <div className="user">{event["agent"]}</div>&nbsp;stole&nbsp;
-              <div className="tile-word">
-                {event["stealWord"].toUpperCase()}
-              </div>
+              <WordTiles word={event["stealWord"]} />
               &nbsp;from&nbsp;<div className="user">{event["stealFrom"]}</div>
               &nbsp;to create&nbsp;
-              <div className="tile-word">{event["word"].toUpperCase()}</div>
+              <WordTiles word={event["word"]} />
             </div>
           );
         } else {
@@ -85,7 +85,7 @@ function EventLog(props) {
           return (
             <div className="event-text" key={idx}>
               <div className="user">{event["agent"]}</div>&nbsp;created&nbsp;
-              <div className="tile-word">{event["word"].toUpperCase()}</div>
+              <WordTiles word={event["word"]} />
               &nbsp;from the board
             </div>
           );

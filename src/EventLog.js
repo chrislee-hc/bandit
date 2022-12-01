@@ -1,22 +1,21 @@
 import React, { useEffect, useState, useRef } from "react";
+
+import OptionsDropdown from "./OptionsDropdown";
 import "./stylesheets/EventLog.css";
 
 function EventLog(props) {
-  let [events, setEventsHook] = useState([]);
+  let [events, setEvents] = useState([]);
+  let [optionsSelectedSet, setOptionsSelectedSet] = useState(
+    new Set(["flip", "join", "disconnect", "new_word", "steal"])
+  );
   let bottomRef = useRef(null);
 
   useEffect(() => {
     const handleEvent = (event) => {
-      setEventsHook([...events, eventToDiv(event, events.length)]);
+      setEvents((events) => [...events, event]);
     };
-    const handleAllEvents = (newEvents) => {
-      console.log("here");
-      console.log(newEvents.length);
-      console.log(newEvents);
-      console.log(eventToDiv(newEvents[0], 1));
-      console.log(newEvents.map(eventToDiv));
-      setEventsHook(newEvents.map(eventToDiv));
-      console.log(events);
+    const handleAllEvents = (events) => {
+      setEvents(events);
     };
     props.socket.on("event", handleEvent);
     props.socket.on("allEvents", handleAllEvents);
@@ -24,15 +23,21 @@ function EventLog(props) {
       props.socket.off("event", handleEvent);
       props.socket.off("allEvents", handleAllEvents);
     };
-  }, [props.socket, events]);
+  }, [props.socket]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [events]);
+  }, [events, optionsSelectedSet]);
 
   const eventToDiv = (event, idx) => {
+    if (event["agent"] === null) {
+      return null;
+    }
     switch (event["eventType"]) {
       case "flip":
+        if (!optionsSelectedSet.has("flip")) {
+          return null;
+        }
         return (
           <div className="event-text" key={idx}>
             <div className="user">{event["agent"]}</div>&nbsp;flipped a tile:{" "}
@@ -40,12 +45,18 @@ function EventLog(props) {
           </div>
         );
       case "join":
+        if (!optionsSelectedSet.has("join")) {
+          return null;
+        }
         return (
           <div className="event-text" key={idx}>
             <div className="user">{event["agent"]}</div>&nbsp;joined the game
           </div>
         );
       case "disconnect":
+        if (!optionsSelectedSet.has("disconnect")) {
+          return null;
+        }
         return (
           <div className="event-text" key={idx}>
             <div className="user">{event["agent"]}</div>&nbsp;disconnected
@@ -53,34 +64,50 @@ function EventLog(props) {
         );
       case "word":
         if (event["steal"]) {
+          if (!optionsSelectedSet.has("steal")) {
+            return null;
+          }
           return (
             <div className="event-text" key={idx}>
               <div className="user">{event["agent"]}</div>&nbsp;stole&nbsp;
-              <div className="tile-word">{event["stealWord"]}</div>
+              <div className="tile-word">
+                {event["stealWord"].toUpperCase()}
+              </div>
               &nbsp;from&nbsp;<div className="user">{event["stealFrom"]}</div>
               &nbsp;to create&nbsp;
-              <div className="tile-word">{event["word"]}</div>
+              <div className="tile-word">{event["word"].toUpperCase()}</div>
             </div>
           );
         } else {
+          if (!optionsSelectedSet.has("new_word")) {
+            return null;
+          }
           return (
             <div className="event-text" key={idx}>
               <div className="user">{event["agent"]}</div>&nbsp;created&nbsp;
-              <div className="tile-word">{event["word"]}</div>&nbsp;from the
-              board
+              <div className="tile-word">{event["word"].toUpperCase()}</div>
+              &nbsp;from the board
             </div>
           );
         }
       default:
-        console.log("hi");
+        console.log("error");
     }
   };
 
   return (
     <div className="event-log">
-      <div className="event-log-title">Event Log</div>
+      <div className="event-log-top-box">
+        <div className="event-log-title">Event Log</div>
+        <div className="event-log-dropdown">
+          <OptionsDropdown
+            optionsSelectedSet={optionsSelectedSet}
+            setOptionsSelectedSet={setOptionsSelectedSet}
+          />
+        </div>
+      </div>
       <div className="event-list">
-        {events} <div ref={bottomRef}></div>
+        {events.map(eventToDiv)} <div ref={bottomRef}></div>
       </div>
     </div>
   );

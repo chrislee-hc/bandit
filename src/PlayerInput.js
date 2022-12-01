@@ -10,7 +10,9 @@ function PlayerInput(props) {
   let [numTilesRemaining, setNumTilesRemaining] = useState(null);
 
   useEffect(() => {
-    const numTilesListener = (n) => setNumTilesRemaining(n);
+    const numTilesListener = (n) => {
+      setNumTilesRemaining(n);
+    };
     props.socket.on("numTilesUpdate", numTilesListener);
     return () => {
       props.socket.off("numTilesUpdate", numTilesListener);

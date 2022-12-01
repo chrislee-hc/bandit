@@ -6,7 +6,7 @@ function App() {
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    const USE_PROD_SERVER = false;
+    const USE_PROD_SERVER = true;
     let newSocket;
     if (USE_PROD_SERVER) {
       newSocket = io("https://bandit-server-production.up.railway.app/");

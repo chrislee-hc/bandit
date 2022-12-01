@@ -13,6 +13,7 @@ function Game(props) {
   let [wordLists, setWordLists] = useState({});
   let [rejected, setRejected] = useState(false);
   let [currentPlayer, setCurrentPlayer] = useState(null);
+  let [numTilesRemaining, setNumTilesRemaining] = useState(null);
   let ref = useRef(null);
 
   useEffect(() => {
@@ -29,17 +30,22 @@ function Game(props) {
     const currentPlayerListener = (un) => {
       setCurrentPlayer(un);
     };
+    const numTilesListener = (n) => {
+      setNumTilesRemaining(n);
+    };
 
     props.socket.on("updateFlippedTiles", flipListener);
     props.socket.on("updateWordLists", handleUpdateWordLists);
     props.socket.on("serverRestart", handleReset);
     props.socket.on("currentPlayer", currentPlayerListener);
+    props.socket.on("numTilesUpdate", numTilesListener);
 
     return () => {
       props.socket.off("updateFlippedTiles", flipListener);
       props.socket.off("updateWordLists", handleUpdateWordLists);
       props.socket.off("serverRestart", handleReset);
       props.socket.off("currentPlayer", currentPlayerListener);
+      props.socket.off("numTilesUpdate", numTilesListener);
     };
   }, [props.socket]);
 
@@ -62,6 +68,7 @@ function Game(props) {
             socket={props.socket}
             username={username}
             currentPlayer={currentPlayer}
+            numTilesRemaining={numTilesRemaining}
           />
           <Board
             flippedTiles={flippedTiles}
@@ -76,6 +83,8 @@ function Game(props) {
           wordLists={wordLists}
           socket={props.socket}
           currentPlayer={currentPlayer}
+          thisPlayer={username}
+          numTilesRemaining={numTilesRemaining}
         />
       </div>
     </div>

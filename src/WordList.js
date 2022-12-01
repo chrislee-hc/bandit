@@ -17,7 +17,8 @@ function WordList(props) {
 
   const usernameClass = classNames("WordList", {
     "user-name": !props.isCurrent,
-    "user-name-current": props.isCurrent,
+    "user-name-current": props.isCurrent && !props.isThisPlayer,
+    "user-name-this-player": props.isCurrent && props.isThisPlayer,
   });
 
   return (

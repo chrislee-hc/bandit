@@ -8,7 +8,12 @@ function WordListBoard(props) {
         <WordList
           socket={props.socket}
           username={username}
-          isCurrent={username === props.currentPlayer}
+          isThisPlayer={
+            username === props.thisPlayer && props.numTilesRemaining > 0
+          }
+          isCurrent={
+            username === props.currentPlayer && props.numTilesRemaining > 0
+          }
           wordList={props.wordLists[username]}
           key={idx}
         />

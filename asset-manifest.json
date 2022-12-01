@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/bandit-client/static/css/main.d784286d.css",
-    "main.js": "/bandit-client/static/js/main.2a9aaab0.js",
+    "main.js": "/bandit-client/static/js/main.1b33eac3.js",
     "static/js/787.58fafe82.chunk.js": "/bandit-client/static/js/787.58fafe82.chunk.js",
     "index.html": "/bandit-client/index.html",
     "main.d784286d.css.map": "/bandit-client/static/css/main.d784286d.css.map",
-    "main.2a9aaab0.js.map": "/bandit-client/static/js/main.2a9aaab0.js.map",
+    "main.1b33eac3.js.map": "/bandit-client/static/js/main.1b33eac3.js.map",
     "787.58fafe82.chunk.js.map": "/bandit-client/static/js/787.58fafe82.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.d784286d.css",
-    "static/js/main.2a9aaab0.js"
+    "static/js/main.1b33eac3.js"
   ]
 }
